@@ -98,7 +98,7 @@
 
 
         <div class="slide-one-item home-slider owl-carousel">  
-        @php  $PopularVideo = \App\Video::find(27); @endphp
+        @php  $PopularVideo = \App\Video::find(19); @endphp
         @if($PopularVideo)
         <a href="{{'/watch/'.str::slug($PopularVideo->name).'/'.$PopularVideo->id}}">        
           <div class="site-blocks-cover" style="background-image: url(/storage/images/<?php echo $PopularVideo->image; ?>);" data-aos="fade" data-stellar-background-ratio="0.1">
@@ -119,7 +119,7 @@
           </div>
           </a>
           @endif
-          @php  $PopularVideo = \App\Video::find(13); @endphp
+          @php  $PopularVideo = \App\Video::find(12); @endphp
           @if($PopularVideo)
           <a href="{{'/watch/'.str::slug($PopularVideo->name).'/'.$PopularVideo->id}}">
           <div class="site-blocks-cover" style="background-image: url(/storage/images/<?php echo $PopularVideo->image; ?>);" data-aos="fade" data-stellar-background-ratio="0.5">
@@ -140,7 +140,7 @@
           </div>
           </a>
           @endif
-          @php  $PopularVideo = \App\Video::find(11); @endphp
+          @php  $PopularVideo = \App\Video::find(20); @endphp
           @if($PopularVideo)
           <a href="{{'/watch/'.str::slug($PopularVideo->name).'/'.$PopularVideo->id}}">
           <div class="site-blocks-cover" style="background-image: url(/storage/images/<?php echo $PopularVideo->image; ?>);" data-aos="fade" data-stellar-background-ratio="0.5">

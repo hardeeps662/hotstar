@@ -33,42 +33,61 @@ class FrontendController extends Controller
     }
 
     public function premium(){
-        return view('frontend.premium');
+      if (Auth::check()) {
+        $user=Auth::user();
+        if ($user->subscribed('Premium Channels')) {
+          $videos = \App\Video::get();
+           $categories=\App\Category::with('subcategories','videos')->get();
+            return view('frontend.paid',compact('categories','videos'));
+        }else{
+          return view('frontend.premium');
+        }
+      }
+
+      return view('frontend.premium');
+    
     }
     
     public function subscribe($plan){
 
         $user=Auth::user();
-        
+       
         $intent = $user->createSetupIntent();
         return view('frontend.subscribe',compact('intent','plan'));
     }
 
     public function payment(Request $request){
 
+      $validatedData = $request->validate([
+        'name' => 'required|min:3|max:50',
+        'line1' => 'required',
+        'postal_code' => 'required|max:8',
+        'city' => 'required|min:3|max:15',
+        'state' => 'required|min:3|max:20',
+        'country' => 'required|min:3|max:20',
+    ]);
         $user = Auth::user();
         $requestData = $request->all();
-      //  dd($requestData);
 
+         $user->createOrGetStripeCustomer();
         $stripeCustomer = $user->updateStripeCustomer([
-                                   'name'=>'harry',
+                                   'name'=>$requestData['name'],
                                     'address'=>[
-                                      'line1' => '510 Townsend St',
-                                          'postal_code' => '98140',
-                                          'city' => 'San Francisco',
-                                          'state' => 'CA',
-                                          'country' => 'US',
+                                      'line1' => $requestData['line1'],
+                                          'postal_code' => $requestData['postal_code'],
+                                          'city' => $requestData['city'],
+                                          'state' => $requestData['state'],
+                                          'country' => $requestData['country'],
                                     ],]);
 
 
 
           $payment_methods = $requestData['paymentMethod']['payment_method'];
-          //dd($payment_methods);
+          $user->newSubscription('Premium Channels', $requestData['plan'])
+               ->create($payment_methods,['description'=>'a testing mode']);
+        
 
-          $user->newSubscription('Hd channels', 'price_1HBpCJH1fI2EIRYNK5uPdvQ1')->create($payment_methods,[
-              'description'=>'a testing mode'
-          ]);
-          return back()->with('success','Subscription is completed.');
+            return response()->json(['redirect'=> url('/premium')]);
     }
 
 }

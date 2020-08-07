@@ -17,8 +17,8 @@ Route::get('/', 'FrontendController@index');
 Route::get('/channels/{name}/{id}', 'FrontendController@show');
 Route::get('/watch/{name}/{id}', 'FrontendController@watch');
 Route::get('/premium', 'FrontendController@premium');
-Route::get('/subscribe/{name}', 'FrontendController@subscribe');
-Route::post('/subscribe', 'FrontendController@payment');
+Route::get('/subscribe/{name}', 'FrontendController@subscribe')->middleware('auth');
+Route::post('/subscribe', 'FrontendController@payment')->middleware('auth');
 
 Auth::routes();
 
