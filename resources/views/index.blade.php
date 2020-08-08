@@ -16,7 +16,7 @@
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelementplayer.min.css">
     
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
     <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
     
@@ -31,6 +31,10 @@
         -webkit-transform: scale(1.6); /* Safari 3-8 */
         transform: scale(1.6); 
       }
+
+
+     
+
     </style>
     
     <div class="site-wrap">
@@ -70,8 +74,24 @@
                           @endforeach
                           <li><a href="">News</a></li>
                           <li><a href="/premium">Premium</a></li>
+                          <li>
+                            <div class="container">
+                              <div class="row">
+                                <form class="form" >
+                                  <div class="input-group">
+                                      <input class="form-control" type="text" placeholder="Search..." aria-label="Search" style=" border: none;background: none;border-bottom: 1px solid;border-radius: 0px;height: 32px;    position: relative;padding: 0 28px 0 0px;" id="mysearch" autocomplete="off" onkeyup="search(this.value)">
+                                      <div class="input-group-addon" style="margin-left: -40px; z-index: 3; border-radius: 40px; background-color: transparent; border:none;">
+                                      <i class="fa fa-search" style="display: inline-block;position: absolute;top: 8px;right: -35px;"></i>
+                                      </div>
+                                  </div>
+                                </form>
+                              </div>
+                              
+                            </div>
+                            
+                          </li>
                           @if(Auth::check())
-                          <li><a href="{{url('/logout')}}" onclick="event.preventDefault();
+                          <li class="ml-5"><a href="{{url('/logout')}}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         Logout
 
@@ -81,10 +101,10 @@
                           </form>
                         </li>
                           @else
-                          <li><a href="/home">Login</a></li>
+                          <li class="ml-4"><a href="/home">Login</a></li>
                           @endif
                         </ul>
-                        
+                        <div id="searchBox"></div>
                       </div>
                     </nav>
                   </div>
@@ -292,7 +312,7 @@
       <script src="js/jquery.magnific-popup.min.js"></script>
       <script src="js/bootstrap-datepicker.min.js"></script>
       <script src="js/aos.js"></script>
-      
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
       <script src="js/mediaelement-and-player.min.js"></script>
       <script src="js/main.js"></script>
       <script>
@@ -312,6 +332,40 @@
                     });
                     }
                 });
+           function search(val){
+
+              axios.post('/search_items',{
+                search_data:val,
+              }).then(response=>{
+                var data = response.data;
+                if (data != 'No Data') {
+                  $('#searchBox').html("");
+                $('#searchBox').addClass('container col-md-6 ');
+                maindiv=document.getElementById('searchBox');
+                var div1=document.createElement('div');
+
+                div1.className='row';
+                maindiv.appendChild(div1);
+                 var div2=document.createElement('div');
+                 var div3=document.createElement('div');
+                  div2.className='col-md-7 img';
+                  div1.appendChild(div2);
+                  div3.className='col-md-5 listname';
+                  div1.appendChild(div3);
+                 data.forEach(value=>{
+                $('.img').append('<li><a href="/watch/'+value.name+'/'+value.id+'"><img src="/storage/images/'+value.image+'" width="160px" height="80px"></a></li>');
+                  $('.listname').append('<li style="list-style:none;"><h6 style="font-size:18px;color:black;">'+value.name+'</h6>'+value.tag+'</li>');
+                 })
+                 $('#searchBox').append('<a href="/search-result/'+val+'" class="btn btn-block mt-3" style="background-color: #495e8e;color:white">More Result</a>');
+              }else{
+                $('#searchBox').html("");
+                $('#searchBox').text("No Data");
+
+              }}).catch(errors=>{
+                console.log(errors.response);
+              });
+            
+           }
         </script>
       
     </body>

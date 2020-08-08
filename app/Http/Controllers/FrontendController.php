@@ -10,20 +10,42 @@ class FrontendController extends Controller
 {
     public function index(){
          
-
     	$videos = \App\Video::get();
       $categories=\App\Category::with('subcategories','videos')->get();
 
     	return view('index',compact('videos','categories'));
     }
 
+    public function search(Request $request,$name=null){
+        if($name==null){
+          if ($request->search_data != "") {
+
+             $videos = \App\Video::where('name','LIKE','%'.$request->search_data.'%')
+                                 ->orWhere('tag','LIKE','%'.$request->search_data.'%')
+                                 ->select('id','name','tag','image')->take(4)->get();
+             return response()->json($videos);
+          }else{
+            return response()->json('No Data');
+          }
+        }else{
+            $categories=\App\Category::with('subcategories')->get();                  
+            $videos = \App\Video::where('name','LIKE','%'.$name.'%')
+                               ->orWhere('tag','LIKE','%'.$name.'%')
+                               ->select('id','name','tag','image')->get();
+
+            return view('frontend.searchResult',compact('videos','categories','name'));
+        }
+
+    }
+
      public function show($name,$id){
 
-    	$Subcat = \App\Subcategory::with('videos')->find($id);   
-     	$categories=\App\Category::with('subcategories')->get();
+      	$Subcat = \App\Subcategory::with('videos')->find($id);   
+       	$categories=\App\Category::with('subcategories')->get();
 
-    	return view('frontend.show',compact('Subcat','categories'));
+      	return view('frontend.show',compact('Subcat','categories'));
     }
+
      public function watch($name,$id){
 
         $videos = \App\Video::find($id);    
@@ -34,16 +56,17 @@ class FrontendController extends Controller
 
     public function premium(){
       if (Auth::check()) {
+
         $user=Auth::user();
         if ($user->subscribed('Premium Channels')) {
           $videos = \App\Video::get();
-           $categories=\App\Category::with('subcategories','videos')->get();
-            return view('frontend.paid',compact('categories','videos'));
+          $categories=\App\Category::with('subcategories','videos')->get();
+          return view('frontend.paid',compact('categories','videos'));
+
         }else{
           return view('frontend.premium');
         }
       }
-
       return view('frontend.premium');
     
     }
@@ -70,14 +93,14 @@ class FrontendController extends Controller
         $requestData = $request->all();
 
          $user->createOrGetStripeCustomer();
-        $stripeCustomer = $user->updateStripeCustomer([
-                                   'name'=>$requestData['name'],
+         $stripeCustomer = $user->updateStripeCustomer([
+                                    'name'=>$requestData['name'],
                                     'address'=>[
-                                      'line1' => $requestData['line1'],
-                                          'postal_code' => $requestData['postal_code'],
-                                          'city' => $requestData['city'],
-                                          'state' => $requestData['state'],
-                                          'country' => $requestData['country'],
+                                    'line1' => $requestData['line1'],
+                                    'postal_code' => $requestData['postal_code'],
+                                    'city' => $requestData['city'],
+                                    'state' => $requestData['state'],
+                                    'country' => $requestData['country'],
                                     ],]);
 
 

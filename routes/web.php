@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'FrontendController@index');
+Route::post('/search_items', 'FrontendController@search');
+Route::get('/search-result/{name}', 'FrontendController@search');
 Route::get('/channels/{name}/{id}', 'FrontendController@show');
 Route::get('/watch/{name}/{id}', 'FrontendController@watch');
 Route::get('/premium', 'FrontendController@premium');
