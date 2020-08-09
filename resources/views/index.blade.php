@@ -364,8 +364,8 @@
 
               }   */
 
-              console.log(response.data);
 
+                $('#searchBox').html("");
               $('#searchBox').html(response.data);
             }).catch(errors=>{
                 console.log(errors.response);
