@@ -50,62 +50,63 @@
         
         <div class="site-navbar-wrap js-site-navbar bg-white">
           
-          <div class="container">
+          <div class="container-fluid">
             <div class="site-navbar">
               <div class="py-1">
-                <div class="row align-items-center">
+                <div class="row ">
                   <div class="col-2">
-                    <h2 class="mb-0"><a href="">Hotstar</a></h2>
+                    <h2 class="ml-5"><a href="">Hotstar</a></h2>
                   </div>
                   <div class="col-10">
-                    <nav class="site-navigation text-right" role="navigation">
+                    <nav class="site-navigation" role="navigation">
                       <div class="container">
-                        <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
-                        <ul class="site-menu js-clone-nav d-none d-lg-block">
-                          @foreach($categories as $category)
-                          <li class="active has-children">
-                            <a href="/">{{$category->name}}</a>
-                            <ul class="dropdown arrow-down">
-                              @foreach($category->subcategories as $subcategory)
-                              <li><a href="{{'/channels/'.Str::slug($subcategory->name).'/'.$subcategory->id}}">{{$subcategory->name}}</a></li>
-                              @endforeach
-                            </ul>
-                          </li>
-                          @endforeach
-                          <li><a href="">News</a></li>
-                          <li><a href="/premium">Premium</a></li>
-                          <li>
-                            <div class="container">
-                              <div class="row">
-                                <form class="form" >
-                                  <div class="input-group">
-                                      <input class="form-control" type="text" placeholder="Search..." aria-label="Search" style=" border: none;background: none;border-bottom: 1px solid;border-radius: 0px;height: 32px;    position: relative;padding: 0 28px 0 0px;" id="mysearch" autocomplete="off" onkeyup="search(this.value)">
-                                      <div class="input-group-addon" style="margin-left: -40px; z-index: 3; border-radius: 40px; background-color: transparent; border:none;">
-                                      <i class="fa fa-search" style="display: inline-block;position: absolute;top: 8px;right: -35px;"></i>
-                                      </div>
-                                  </div>
-                                </form>
-                              </div>
-                              
-                            </div>
-                            
-                          </li>
-                          @if(Auth::check())
-                          <li class="ml-5"><a href="{{url('/logout')}}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        Logout
+                        <div class="row">
+                          
+                          <div class="col-md-8">
+                          <ul class="site-menu js-clone-nav  d-sm-block" >
+                            @foreach($categories as $category)
+                            <li class="active has-children">
+                              <a href="/">{{$category->name}}</a>
+                              <ul class="dropdown arrow-down">
+                                @foreach($category->subcategories as $subcategory)
+                                <li><a href="{{'/channels/'.Str::slug($subcategory->name).'/'.$subcategory->id}}">{{$subcategory->name}}</a></li>
+                                @endforeach
+                              </ul>
+                            </li>
+                            @endforeach
+                            <li><a href="">News</a></li>
+                            <li><a href="/premium">Premium</a></li>
+                            @if(Auth::check())
+                            <li ><a href="{{url('/logout')}}" onclick="event.preventDefault();
+                                                       document.getElementById('logout-form').submit();">
+                                          Logout
 
-                          </a>
-                          <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                              @csrf
-                          </form>
-                        </li>
-                          @else
-                          <li class="ml-4"><a href="/home">Login</a></li>
-                          @endif
-                        </ul>
-                        <div id="searchBox"></div>
+                            </a>
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                          </li>
+                            @else
+                            <li><a href="/home">Login</a></li>
+                            @endif
+                          </ul>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="col-md-9">
+
+                                <div class="input-group">
+                                    <input class="form-control" type="text" placeholder="Search..." aria-label="Search" style=" border: none;background: none;border-bottom: 1px solid;border-radius: 0px;height: 32px;    position: relative;padding: 0 28px 0 0px;" id="mysearch" autocomplete="off" onkeyup="search(this.value)">
+                                    <div class="input-group-addon" style="margin-left: -40px; border-radius: 40px; background-color: transparent; border:none;">
+                                    <i class="fa fa-search" style="display: inline-block;position: absolute;top: 8px;right: -35px;"></i>
+                                    </div>
+                                </div>
+
+                            </div> 
+                            <div id="searchBox"></div>                             
+                          </div>
+                        </div>
                       </div>
+                        
                     </nav>
                   </div>
                 </div>
@@ -114,7 +115,7 @@
           </div>
         </div>
         
-        <div style="height: 113px;"></div>
+        <div style="height: 90px;"></div>
 
 
         <div class="slide-one-item home-slider owl-carousel">  
@@ -337,7 +338,7 @@
               axios.post('/search_items',{
                 search_data:val,
               }).then(response=>{
-                var data = response.data;
+            /*    var data = response.data;
                 if (data != 'No Data') {
                   $('#searchBox').html("");
                 $('#searchBox').addClass('container col-md-6 ');
@@ -348,9 +349,9 @@
                 maindiv.appendChild(div1);
                  var div2=document.createElement('div');
                  var div3=document.createElement('div');
-                  div2.className='col-md-7 img';
+                  div2.className='col-md-7 img  ';
                   div1.appendChild(div2);
-                  div3.className='col-md-5 listname';
+                  div3.className='col-md-5 listname ';
                   div1.appendChild(div3);
                  data.forEach(value=>{
                 $('.img').append('<li><a href="/watch/'+value.name+'/'+value.id+'"><img src="/storage/images/'+value.image+'" width="160px" height="80px"></a></li>');
@@ -361,7 +362,12 @@
                 $('#searchBox').html("");
                 $('#searchBox').text("No Data");
 
-              }}).catch(errors=>{
+              }   */
+
+              console.log(response.data);
+
+              $('#searchBox').html(response.data);
+            }).catch(errors=>{
                 console.log(errors.response);
               });
             

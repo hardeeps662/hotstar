@@ -23,7 +23,20 @@ class FrontendController extends Controller
              $videos = \App\Video::where('name','LIKE','%'.$request->search_data.'%')
                                  ->orWhere('tag','LIKE','%'.$request->search_data.'%')
                                  ->select('id','name','tag','image')->take(4)->get();
-             return response()->json($videos);
+                $output='<ul class="dropdown-menu" style="background-color: #212121; display: block;overflow:hidden;padding:5px;padding-top:1px;border:1px solid black;">';
+                foreach ($videos as $key => $video) {
+                  $output .='<a href="/watch/'.$video->name.'/'.$video->id.'"><div class="row mt-2 " style="background-color: #25365a;" >';
+                  $output .='<div class="col-6">';
+                   $output .='<li><img src="/storage/images/'.$video->image.'" width="160px" height="90px"></li>';
+                   $output .='</div>';
+                   $output .='<div class="col-6 ">';
+                   $output .='<li style="color:white">'.$video->name.'<br>'.$video->tag.'</li>';
+                   $output .='</div>';
+                   $output .='</div></a>';
+                }
+                $output .='<a class="btn btn-primary btn-block mt-1" href="/search-result/'.$request->search_data.'">More Result</a>';
+                $output .='</ul>';
+                return response()->json($output);
           }else{
             return response()->json('No Data');
           }
