@@ -71,6 +71,29 @@ class FrontendController extends Controller
       if (Auth::check()) {
 
         $user=Auth::user();
+
+        $subscriptionItem = $user->subscription('Premium Channels')->items->first();
+        $stripePlan = $subscriptionItem->stripe_plan;
+        if ($stripePlan == 'price_HJF2CNzKvUqvFW') {
+            $plan_expire_date=$subscriptionItem->created_at->addMonth();
+
+            if (now() == $plan_expire_date) {
+
+             $user->subscription('Premium Channels')->cancelNow(); 
+
+            }
+
+        }else{
+          $plan_expire_date=$subscriptionItem->created_at->addYear();
+
+            if (now() == $plan_expire_date) {
+
+             $user->subscription('Premium Channels')->cancelNow(); 
+
+            }
+
+        }
+
         if ($user->subscribed('Premium Channels')) {
           $videos = \App\Video::get();
           $categories=\App\Category::with('subcategories','videos')->get();
